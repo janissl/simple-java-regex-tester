@@ -52,6 +52,7 @@ public class UserForm extends javax.swing.JFrame {
         javax.swing.JButton closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Simple Tester for Java Regular Expressions");
         setPreferredSize(new java.awt.Dimension(432, 250));
 
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
