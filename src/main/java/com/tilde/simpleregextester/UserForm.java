@@ -172,14 +172,14 @@ public class UserForm extends javax.swing.JFrame {
     
     private void TestRegex() throws BadLocationException {
         String text = inputPane.getText();
+        
+        // Fix issue with EOL characters by replacing them with Unix-style '\n'.
+        text = text.replaceAll("\r\n", "\n");
+        inputPane.setText(text);
+        
         String pattern = rxField.getText();
         
-//        Highlighter hltr = outputPane.getHighlighter();
         Highlighter hltr = inputPane.getHighlighter();
-        // TODO: EOL characters cause offsets of matcher start/end positions.
-        //          Therefore each line should be processed and highlighted
-        //          separately.
-        
         Highlighter.Highlight[] highlights = hltr.getHighlights();
         
         for (Highlighter.Highlight h : highlights) {
