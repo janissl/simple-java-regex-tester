@@ -173,7 +173,7 @@ public class UserForm extends javax.swing.JFrame {
     private void TestRegex() throws BadLocationException {
         String text = inputPane.getText();
         
-        // Fix issue with EOL characters by replacing them with Unix-style '\n'.
+        // Fix a possible issue with EOL characters by replacing them with Unix-style EOLs.
         text = text.replaceAll("\r\n", "\n");
         inputPane.setText(text);
         
@@ -201,19 +201,16 @@ public class UserForm extends javax.swing.JFrame {
                 Matcher m = r.matcher(text);
                 while (m.find()) {
                     count++;
-                    int startPos = m.start();
-                    int endPos = m.end();
+                    
                     ArrayList<Integer> currentHighlightPositions = new ArrayList<>();
-                    currentHighlightPositions.add(startPos);
-                    currentHighlightPositions.add(endPos);
+                    currentHighlightPositions.add(m.start());
+                    currentHighlightPositions.add(m.end());
                     highlightPositions.add(currentHighlightPositions);
                     
-                    if (m.groupCount() > 0) {
-                        for (int i = 1; i <= m.groupCount(); i++) {
-                            outputText += String.format("#%d (at %d): %s\n", i, startPos, m.group(i));
-                        }
-                        outputText += "- - - - -\n";
+                    for (int i = 0; i <= m.groupCount(); i++) {
+                        outputText += String.format("Match %d (Group %d (%d-%d)): '%s'\n", count, i, m.start(i), m.end(i), m.group(i));
                     }
+                    outputText += "- - - - -\n";
                 }
             }
             catch (Exception e) {
