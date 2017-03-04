@@ -57,7 +57,7 @@ public class UserForm extends javax.swing.JFrame {
         rxLabel.setText("RegEx:");
         rxLabel.setToolTipText("");
 
-        outputLabel.setText("Results:");
+        outputLabel.setText("Matched Groups:");
 
         testButton.setText("Test");
         testButton.addActionListener(new java.awt.event.ActionListener() {
@@ -95,7 +95,7 @@ public class UserForm extends javax.swing.JFrame {
                             .addComponent(rxField)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(outputLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 320, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
                         .addComponent(testButton))
                     .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
@@ -194,15 +194,26 @@ public class UserForm extends javax.swing.JFrame {
             ArrayList<ArrayList> highlightPositions = new ArrayList<>();
             int count = 0;
             
+            String outputText = "";
+            
             try {
                 Pattern r = Pattern.compile(pattern);
                 Matcher m = r.matcher(text);
                 while (m.find()) {
                     count++;
+                    int startPos = m.start();
+                    int endPos = m.end();
                     ArrayList<Integer> currentHighlightPositions = new ArrayList<>();
-                    currentHighlightPositions.add(m.start());
-                    currentHighlightPositions.add(m.end());
+                    currentHighlightPositions.add(startPos);
+                    currentHighlightPositions.add(endPos);
                     highlightPositions.add(currentHighlightPositions);
+                    
+                    if (m.groupCount() > 0) {
+                        for (int i = 1; i <= m.groupCount(); i++) {
+                            outputText += String.format("#%d (at %d): %s\n", i, startPos, m.group(i));
+                        }
+                        outputText += "- - - - -\n";
+                    }
                 }
             }
             catch (Exception e) {
@@ -212,14 +223,14 @@ public class UserForm extends javax.swing.JFrame {
             }
            
             if (count > 0) {
-                outputPane.setForeground(Color.blue);
-                outputPane.setText(text);
-                
                 for (ArrayList curPositions : highlightPositions) {
                     hltr.addHighlight(Integer.parseInt(curPositions.get(0).toString()),
                             Integer.parseInt(curPositions.get(1).toString()),
                             new DefaultHighlighter.DefaultHighlightPainter(Color.green));
                 }
+                
+                outputPane.setForeground(Color.blue);
+                outputPane.setText(outputText);
             }
             else {
                 outputPane.setForeground(Color.red);
