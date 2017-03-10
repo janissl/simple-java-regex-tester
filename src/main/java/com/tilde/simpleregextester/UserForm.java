@@ -212,6 +212,7 @@ public class UserForm extends javax.swing.JFrame {
         inputPane.setText(text);
         
         String pattern = rxField.getText();
+        if (pattern.length() == 0) { return; }
         
         Highlighter hltr = inputPane.getHighlighter();
         Highlighter.Highlight[] highlights = hltr.getHighlights();
