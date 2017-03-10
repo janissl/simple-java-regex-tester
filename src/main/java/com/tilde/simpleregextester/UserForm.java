@@ -242,7 +242,9 @@ public class UserForm extends javax.swing.JFrame {
                     highlightPositions.add(currentHighlightPositions);
                     
                     for (int i = 0; i <= m.groupCount(); i++) {
-                        outputText += String.format("Match %d (Group %d (%d-%d)): '%s'\n", count, i, m.start(i), m.end(i), m.group(i));
+                        if (m.start(i) >= 0 && m.end(i) >= 0) {
+                            outputText += String.format("Match %d (Group %d (%d-%d)): '%s'\n", count, i, m.start(i), m.end(i), m.group(i));
+                        }
                     }
                     outputText += "- - - - -\n";
                 }
