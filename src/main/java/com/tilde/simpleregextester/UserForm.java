@@ -7,6 +7,8 @@ package com.tilde.simpleregextester;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -207,7 +209,7 @@ public class UserForm extends javax.swing.JFrame {
     private void TestRegex() throws BadLocationException {
         String text = inputPane.getText();
         
-        // Fix a possible issue with EOL characters by replacing them with Unix-style EOLs.
+        // This fixes possible issues with EOL characters by replacing them with Unix-style EOLs.
         text = text.replaceAll("\r\n", "\n");
         inputPane.setText(text);
         
@@ -229,8 +231,10 @@ public class UserForm extends javax.swing.JFrame {
             ArrayList<ArrayList> highlightPositions = new ArrayList<>();
             int count = 0;
             
-            String outputText = "";
+            StringBuilder sb = new StringBuilder();
             
+            ArrayList<String> regexGroups = GetRegexGroups(pattern);
+          
             try {
                 Pattern r = Pattern.compile(pattern);
                 Matcher m = r.matcher(text);
@@ -242,12 +246,18 @@ public class UserForm extends javax.swing.JFrame {
                     currentHighlightPositions.add(m.end());
                     highlightPositions.add(currentHighlightPositions);
                     
+                    sb.append(String.format("Match %d\n", count));
                     for (int i = 0; i <= m.groupCount(); i++) {
                         if (m.start(i) >= 0 && m.end(i) >= 0) {
-                            outputText += String.format("Match %d (Group %d (%d-%d)): '%s'\n", count, i, m.start(i), m.end(i), m.group(i));
+                            String matchPosString = String.format("%d", m.start(i));
+                            if (m.start(i) != m.end(i) - 1) {
+                                matchPosString += String.format("-%d", m.end(i) - 1);
+                            }
+                            
+                            sb.append(String.format("   Group%d (p.%s): %s   =>   '%s'\n", i, matchPosString, regexGroups.get(i), m.group(i)));
                         }
                     }
-                    outputText += "- - - - -\n";
+                    sb.append("- - - - -\n");
                 }
             }
             catch (Exception e) {
@@ -264,14 +274,86 @@ public class UserForm extends javax.swing.JFrame {
                 }
                 
                 outputPane.setForeground(Color.blue);
-                outputPane.setText(outputText);
+                outputPane.setText(sb.toString());
             }
             else {
                 outputPane.setForeground(Color.red);
                 outputPane.setText("NO MATCH!");
             }
         }
-    } 
+    }
+
+    public ArrayList<String> GetRegexGroups(String rx) {
+        ArrayList<String> rxGroups = new ArrayList<>();
+        Stack<Integer> openingBracketPositions = new Stack<>();
+        List<Integer> closingBracketPositions = new ArrayList<>();
+        List<List<Integer>> matchingGroups = new ArrayList<>();
+        
+        rxGroups.add(rx); // Group0 is always the entire regex string;
+
+        char[] rxChars = rx.toCharArray();
+        
+        for (int i = 0; i < rxChars.length; i++) {
+            String stringBefore = new String(rxChars, 0, i);
+            char curChar = rxChars[i];
+            if (curChar == '(' && !HasEscapeSequence(stringBefore)) {
+                openingBracketPositions.push(i);
+            }
+            else if (curChar == ')' && !HasEscapeSequence(stringBefore)) {
+                closingBracketPositions.add(i);
+            }
+        }
+
+        while (openingBracketPositions.size() > 0) {
+            int[] currentGroup = new int[2];
+            currentGroup[0] = openingBracketPositions.pop();
+
+            for (int i = 0; i < closingBracketPositions.size(); i++) {
+                if (closingBracketPositions.get(i) > currentGroup[0]) {
+                    currentGroup[1] = closingBracketPositions.get(i);
+                    closingBracketPositions.remove(i);
+                    break;
+                }
+            }
+
+            List<Integer> posGroup = new ArrayList<>();
+            for (int pos : currentGroup) {
+                posGroup.add(pos);
+            }
+
+            matchingGroups.add(posGroup);
+        }
+
+        matchingGroups.forEach((group) -> {
+            int startPos = group.get(0);
+            int groupLength = group.get(1) - startPos + 1;
+            rxGroups.add(new String(rxChars, startPos, groupLength));
+        });
+
+        return rxGroups;
+    }
+    
+    public boolean HasEscapeSequence(String s) {
+        if (s.length() > 0) {
+            int backslashCount = 0;
+            String[] stringChars = s.substring(0, s.length()).split(""); 
+            
+            for (int i = stringChars.length - 1; i >= 0; --i) {
+                if (stringChars[i].equals("\\")) {
+                    ++backslashCount;
+                }
+                else {
+                    break;
+                }
+            }
+            
+            if (backslashCount % 2 == 1) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel inputLabel;
