@@ -6,9 +6,8 @@
 package com.tilde.simpleregextester;
 
 import org.junit.Assert;
-import org.junit.Ignore;
+//import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.BeforeClass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,15 +17,16 @@ import java.util.Arrays;
  * @author janis.slapins
  */
 public class UserFormTest {
-    private static UserForm f;
-
-    @BeforeClass
-    public static void initUserForm() {
-        f = new UserForm();
-    }
+//    private static UserForm f;
+//
+//    @BeforeClass
+//    public static void initUserForm() {
+//        f = new UserForm();
+//    }
 
     @Test
     public void testHasEscapeSequence(){
+        UserForm f = new UserForm();
         Assert.assertFalse(f.HasEscapeSequence(""));
         Assert.assertFalse(f.HasEscapeSequence("\\s"));
         Assert.assertTrue(f.HasEscapeSequence("\\"));
@@ -37,6 +37,7 @@ public class UserFormTest {
 
     @Test
     public void testGetRegexGroups() {
+        UserForm f = new UserForm();
         String rx = "a(bc)d(e)f";
         Assert.assertEquals(new ArrayList<>(Arrays.asList("a(bc)d(e)f", "(bc)", "(e)")), f.GetRegexGroups(rx));
         rx = "a(b(c)de)f";
