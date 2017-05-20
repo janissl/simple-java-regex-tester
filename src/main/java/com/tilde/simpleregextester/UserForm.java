@@ -6,9 +6,7 @@
 package com.tilde.simpleregextester;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -249,12 +247,9 @@ public class UserForm extends javax.swing.JFrame {
                     sb.append(String.format("Match %d\n", count));
                     for (int i = 0; i <= m.groupCount(); i++) {
                         if (m.start(i) >= 0 && m.end(i) >= 0) {
-                            String matchPosString = String.format("%d", m.start(i));
-                            if (m.start(i) != m.end(i) - 1) {
-                                matchPosString += String.format("-%d", m.end(i) - 1);
-                            }
-                            
-                            sb.append(String.format("   Group%d (p.%s): %s   =>   '%s'\n", i, matchPosString, regexGroups.get(i), m.group(i)));
+                            String matchPosString = String.format("pos. %d", m.start(i));
+                            matchPosString += String.format(", length %d", m.end(i) - m.start(i));
+                            sb.append(String.format("   Group%d (%s): %s   =>   '%s'\n", i, matchPosString, regexGroups.get(i), m.group(i)));
                         }
                     }
                     sb.append("- - - - -\n");
@@ -287,7 +282,7 @@ public class UserForm extends javax.swing.JFrame {
         ArrayList<String> rxGroups = new ArrayList<>();
         Stack<Integer> openingBracketPositions = new Stack<>();
         List<Integer> closingBracketPositions = new ArrayList<>();
-        List<List<Integer>> matchingGroups = new ArrayList<>();
+        List<RegexGroup> matchingGroups = new ArrayList<>();
         
         rxGroups.add(rx); // Group0 is always the entire regex string;
 
@@ -305,7 +300,7 @@ public class UserForm extends javax.swing.JFrame {
         }
 
         while (openingBracketPositions.size() > 0) {
-            int[] currentGroup = new int[2];
+            Integer[] currentGroup = new Integer[2];
             currentGroup[0] = openingBracketPositions.pop();
 
             for (int i = 0; i < closingBracketPositions.size(); i++) {
@@ -316,18 +311,14 @@ public class UserForm extends javax.swing.JFrame {
                 }
             }
 
-            List<Integer> posGroup = new ArrayList<>();
-            for (int pos : currentGroup) {
-                posGroup.add(pos);
-            }
-
-            matchingGroups.add(posGroup);
+            RegexGroup curRegexGroup = new RegexGroup(currentGroup[0].intValue(), currentGroup[1].intValue(), rx);
+            matchingGroups.add(curRegexGroup);
         }
 
+        Collections.sort(matchingGroups, RegexGroup::compareMC);
+
         matchingGroups.forEach((group) -> {
-            int startPos = group.get(0);
-            int groupLength = group.get(1) - startPos + 1;
-            rxGroups.add(new String(rxChars, startPos, groupLength));
+            rxGroups.add(group.toString());
         });
 
         return rxGroups;
