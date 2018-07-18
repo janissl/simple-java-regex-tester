@@ -61,11 +61,7 @@ public class UserForm extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(430, 100));
 
         testButton.setText("Test");
-        testButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                testButtonActionPerformed(evt);
-            }
-        });
+        testButton.addActionListener(this::testButtonActionPerformed);
 
         outputLabel.setText("Matched Groups:");
 
@@ -122,11 +118,7 @@ public class UserForm extends javax.swing.JFrame {
         jScrollPane2.setViewportView(outputPane);
 
         closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
+        closeButton.addActionListener(this::closeButtonActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -199,9 +191,7 @@ public class UserForm extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new UserForm().setVisible(true);
-        });
+        java.awt.EventQueue.invokeLater(() -> new UserForm().setVisible(true));
     }
     
     private void testRegex() throws BadLocationException {
@@ -278,7 +268,7 @@ public class UserForm extends javax.swing.JFrame {
         }
     }
 
-    public ArrayList<String> getRegexGroups(String rx) {
+    ArrayList<String> getRegexGroups(String rx) {
         ArrayList<String> rxGroups = new ArrayList<>();
         Stack<Integer> openingBracketPositions = new Stack<>();
         List<Integer> closingBracketPositions = new ArrayList<>();
@@ -311,39 +301,33 @@ public class UserForm extends javax.swing.JFrame {
                 }
             }
 
-            RegexGroup curRegexGroup = new RegexGroup(currentGroup[0].intValue(), currentGroup[1].intValue(), rx);
+            RegexGroup curRegexGroup = new RegexGroup(currentGroup[0], currentGroup[1], rx);
             matchingGroups.add(curRegexGroup);
         }
 
-        Collections.sort(matchingGroups, RegexGroup::compareMC);
+        matchingGroups.sort(RegexGroup::compareMC);
 
-        matchingGroups.forEach((group) -> {
-            rxGroups.add(group.toString());
-        });
+        matchingGroups.forEach((group) -> rxGroups.add(group.toString()));
 
         return rxGroups;
     }
     
-    public boolean hasEscapeSequence(String s) {
+    boolean hasEscapeSequence(String s) {
+        int backslashCount = 0;
         if (s.length() > 0) {
-            int backslashCount = 0;
-            String[] stringChars = s.substring(0, s.length()).split(""); 
+            char[] stringChars = s.toCharArray();
             
             for (int i = stringChars.length - 1; i >= 0; --i) {
-                if (stringChars[i].equals("\\")) {
+                if (stringChars[i] == '\\') {
                     ++backslashCount;
                 }
                 else {
                     break;
                 }
             }
-            
-            if (backslashCount % 2 == 1) {
-                return true;
-            }
         }
-        
-        return false;
+
+        return backslashCount % 2 == 1;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

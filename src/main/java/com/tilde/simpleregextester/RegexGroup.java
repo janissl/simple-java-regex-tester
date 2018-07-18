@@ -1,7 +1,5 @@
 package com.tilde.simpleregextester;
 
-import java.util.Comparator;
-
 /**
  * Created by janis.slapins on 5/20/2017.
  */
@@ -10,7 +8,7 @@ public class RegexGroup {
     private int end;
     private String val;
 
-    public RegexGroup(int start, int end, String rx) {
+    RegexGroup(int start, int end, String rx) {
         this.start = start;
         this.end = end;
         this.val = rx.substring(start, end + 1);
@@ -32,7 +30,7 @@ public class RegexGroup {
         return val;
     }
 
-    public static int compareMC(RegexGroup first, RegexGroup second) {
+    static int compareMC(RegexGroup first, RegexGroup second) {
         return first.getStart() - second.getStart();
     }
 }
