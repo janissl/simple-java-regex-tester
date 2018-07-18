@@ -165,7 +165,7 @@ public class UserForm extends javax.swing.JFrame {
 
     private void testButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testButtonActionPerformed
         try {
-            TestRegex();
+            testRegex();
         } catch (BadLocationException ex) {
             Logger.getLogger(UserForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -204,7 +204,7 @@ public class UserForm extends javax.swing.JFrame {
         });
     }
     
-    private void TestRegex() throws BadLocationException {
+    private void testRegex() throws BadLocationException {
         String text = inputPane.getText();
         
         // This fixes possible issues with EOL characters by replacing them with Unix-style EOLs.
@@ -231,7 +231,7 @@ public class UserForm extends javax.swing.JFrame {
             
             StringBuilder sb = new StringBuilder();
             
-            ArrayList<String> regexGroups = GetRegexGroups(pattern);
+            ArrayList<String> regexGroups = getRegexGroups(pattern);
           
             try {
                 Pattern r = Pattern.compile(pattern);
@@ -278,7 +278,7 @@ public class UserForm extends javax.swing.JFrame {
         }
     }
 
-    public ArrayList<String> GetRegexGroups(String rx) {
+    public ArrayList<String> getRegexGroups(String rx) {
         ArrayList<String> rxGroups = new ArrayList<>();
         Stack<Integer> openingBracketPositions = new Stack<>();
         List<Integer> closingBracketPositions = new ArrayList<>();
@@ -291,10 +291,10 @@ public class UserForm extends javax.swing.JFrame {
         for (int i = 0; i < rxChars.length; i++) {
             String stringBefore = new String(rxChars, 0, i);
             char curChar = rxChars[i];
-            if (curChar == '(' && !HasEscapeSequence(stringBefore)) {
+            if (curChar == '(' && !hasEscapeSequence(stringBefore)) {
                 openingBracketPositions.push(i);
             }
-            else if (curChar == ')' && !HasEscapeSequence(stringBefore)) {
+            else if (curChar == ')' && !hasEscapeSequence(stringBefore)) {
                 closingBracketPositions.add(i);
             }
         }
@@ -324,7 +324,7 @@ public class UserForm extends javax.swing.JFrame {
         return rxGroups;
     }
     
-    public boolean HasEscapeSequence(String s) {
+    public boolean hasEscapeSequence(String s) {
         if (s.length() > 0) {
             int backslashCount = 0;
             String[] stringChars = s.substring(0, s.length()).split(""); 

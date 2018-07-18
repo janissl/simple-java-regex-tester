@@ -27,20 +27,20 @@ public class UserFormTest {
     @Test
     public void testHasEscapeSequence(){
         UserForm f = new UserForm();
-        Assert.assertFalse(f.HasEscapeSequence(""));
-        Assert.assertFalse(f.HasEscapeSequence("\\s"));
-        Assert.assertTrue(f.HasEscapeSequence("\\"));
-        Assert.assertFalse(f.HasEscapeSequence("\\\\"));
-        Assert.assertFalse(f.HasEscapeSequence("\\ "));
-        Assert.assertTrue(f.HasEscapeSequence("abc\\\\\\"));
+        Assert.assertFalse(f.hasEscapeSequence(""));
+        Assert.assertFalse(f.hasEscapeSequence("\\s"));
+        Assert.assertTrue(f.hasEscapeSequence("\\"));
+        Assert.assertFalse(f.hasEscapeSequence("\\\\"));
+        Assert.assertFalse(f.hasEscapeSequence("\\ "));
+        Assert.assertTrue(f.hasEscapeSequence("abc\\\\\\"));
     }
 
     @Test
     public void testGetRegexGroups() {
         UserForm f = new UserForm();
         String rx = "a(bc)d(e)f";
-        Assert.assertEquals(new ArrayList<>(Arrays.asList("a(bc)d(e)f", "(bc)", "(e)")), f.GetRegexGroups(rx));
+        Assert.assertEquals(new ArrayList<>(Arrays.asList("a(bc)d(e)f", "(bc)", "(e)")), f.getRegexGroups(rx));
         rx = "a(b(c)de)f";
-        Assert.assertEquals(new ArrayList<>(Arrays.asList("a(b(c)de)f", "(b(c)de)", "(c)")), f.GetRegexGroups(rx));
+        Assert.assertEquals(new ArrayList<>(Arrays.asList("a(b(c)de)f", "(b(c)de)", "(c)")), f.getRegexGroups(rx));
     }
 }
