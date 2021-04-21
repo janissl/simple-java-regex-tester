@@ -170,7 +170,7 @@ public class UserForm extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -202,7 +202,7 @@ public class UserForm extends javax.swing.JFrame {
         inputPane.setText(text);
         
         String pattern = rxField.getText();
-        if (pattern.length() == 0) { return; }
+        if (pattern.isEmpty()) { return; }
         
         Highlighter hltr = inputPane.getHighlighter();
         Highlighter.Highlight[] highlights = hltr.getHighlights();
@@ -215,7 +215,7 @@ public class UserForm extends javax.swing.JFrame {
         
         outputPane.setText("");
         
-        if (text.length() > 0) {
+        if (!text.isEmpty()) {
             ArrayList<ArrayList> highlightPositions = new ArrayList<>();
             int count = 0;
             
@@ -274,7 +274,7 @@ public class UserForm extends javax.swing.JFrame {
         List<Integer> closingBracketPositions = new ArrayList<>();
         List<RegexGroup> matchingGroups = new ArrayList<>();
         
-        rxGroups.add(rx); // Group0 is always the entire regex string;
+        rxGroups.add(rx); // Group0 is always the entire regex string
 
         char[] rxChars = rx.toCharArray();
         
@@ -289,7 +289,7 @@ public class UserForm extends javax.swing.JFrame {
             }
         }
 
-        while (openingBracketPositions.size() > 0) {
+        while (!openingBracketPositions.isEmpty()) {
             Integer[] currentGroup = new Integer[2];
             currentGroup[0] = openingBracketPositions.pop();
 
@@ -307,14 +307,14 @@ public class UserForm extends javax.swing.JFrame {
 
         matchingGroups.sort(RegexGroup::compareMC);
 
-        matchingGroups.forEach((group) -> rxGroups.add(group.toString()));
+        matchingGroups.forEach(group -> rxGroups.add(group.toString()));
 
         return rxGroups;
     }
     
     boolean hasEscapeSequence(String s) {
         int backslashCount = 0;
-        if (s.length() > 0) {
+        if (!s.isEmpty()) {
             char[] stringChars = s.toCharArray();
             
             for (int i = stringChars.length - 1; i >= 0; --i) {
