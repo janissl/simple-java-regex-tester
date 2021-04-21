@@ -270,7 +270,7 @@ public class UserForm extends javax.swing.JFrame {
 
     ArrayList<String> getRegexGroups(String rx) {
         ArrayList<String> rxGroups = new ArrayList<>();
-        Stack<Integer> openingBracketPositions = new Stack<>();
+        Deque<Integer> openingBracketPositions = new ArrayDeque<>();
         List<Integer> closingBracketPositions = new ArrayList<>();
         List<RegexGroup> matchingGroups = new ArrayList<>();
         
