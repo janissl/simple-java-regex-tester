@@ -216,7 +216,7 @@ public class UserForm extends javax.swing.JFrame {
         outputPane.setText("");
         
         if (!text.isEmpty()) {
-            ArrayList<ArrayList> highlightPositions = new ArrayList<>();
+            ArrayList<ArrayList<Integer>> highlightPositions = new ArrayList<>();
             int count = 0;
             
             StringBuilder sb = new StringBuilder();
@@ -252,7 +252,7 @@ public class UserForm extends javax.swing.JFrame {
             }
            
             if (count > 0) {
-                for (ArrayList curPositions : highlightPositions) {
+                for (ArrayList<Integer> curPositions : highlightPositions) {
                     hltr.addHighlight(Integer.parseInt(curPositions.get(0).toString()),
                             Integer.parseInt(curPositions.get(1).toString()),
                             new DefaultHighlighter.DefaultHighlightPainter(Color.green));
