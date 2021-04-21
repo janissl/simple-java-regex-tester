@@ -8,3 +8,7 @@ _NOTE: The source contains a GUI form created using NetBeans GUI Builder._
 
 #### Open from commandline:
 `java -cp * com.tilde.simpleregextester.UserForm`
+
+OR
+
+`java -jar SimpleRegexTester-1.0.jar`
