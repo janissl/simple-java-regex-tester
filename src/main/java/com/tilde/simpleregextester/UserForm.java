@@ -198,7 +198,7 @@ public class UserForm extends javax.swing.JFrame {
         String text = inputPane.getText();
         
         // This fixes possible issues with EOL characters by replacing them with Unix-style EOLs.
-        text = text.replaceAll("\r\n", "\n");
+        text = text.replace("\r\n", "\n");
         inputPane.setText(text);
         
         String pattern = rxField.getText();
