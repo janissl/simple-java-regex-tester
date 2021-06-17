@@ -6,13 +6,15 @@ Matches are higlighted in green at the top pane. Match positions as well as matc
 
 _NOTE: The source contains a GUI form created using NetBeans GUI Builder._
 
-#### Open from commandline:
+### Open from commandline:
 `java -cp * com.tilde.simpleregextester.UserForm`
 
 OR
 
 `java -jar SimpleRegexTester-1.0.jar`
 
+
+---
 ### Application window example
 
 ![App window](./img/app_window.PNG)
