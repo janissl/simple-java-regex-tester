@@ -12,3 +12,7 @@ _NOTE: The source contains a GUI form created using NetBeans GUI Builder._
 OR
 
 `java -jar SimpleRegexTester-1.0.jar`
+
+### Application window example
+
+![App window](./img/app_window.PNG)
